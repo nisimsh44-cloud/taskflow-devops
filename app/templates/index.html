@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskFlow - Project Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #fff; margin: 10px 0; padding: 15px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input[type="text"] { padding: 10px; width: 250px; }
+        button { padding: 10px 15px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>TaskFlow Dashboard</h1>
+    <form action="/add" method="POST">
+        <input type="text" name="title" placeholder="New Task..." required>
+        <button type="submit">Add Task</button>
+    </form>
+    <h2>Current Tasks</h2>
+    <ul>
+        {% for task in tasks %}
+            <li><strong>#{{ task.id }}</strong>: {{ task.title }} — <em>{{ task.status }}</em></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
