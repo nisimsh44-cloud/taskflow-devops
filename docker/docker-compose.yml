@@ -1,0 +1,10 @@
+
+services:
+  taskflow-app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: taskflow-compose-app
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
