@@ -24,21 +24,37 @@ pipeline {
         stage('Test Application') {
             steps {
                 sh '''
-                docker run -d --name taskflow-test -p 5000:5000 ${IMAGE_NAME}
+                docker run -d --name taskflow-test -p 5001:5000 ${IMAGE_NAME}
 
                 sleep 5
 
-                curl -f http://localhost:5000/health
-
-                docker stop taskflow-test
-                docker rm taskflow-test
+                curl -f http://localhost:5001/health
                 '''
+            }
+
+            post {
+                always {
+                    sh '''
+                    docker stop taskflow-test || true
+                    docker rm taskflow-test || true
+                    '''
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deploy stage will restart application on EC2"
+                sh '''
+                cd docker
+
+                docker compose down || true
+
+                docker compose up -d --build
+
+                sleep 5
+
+                curl -f http://localhost:5000/health
+                '''
             }
         }
     }
