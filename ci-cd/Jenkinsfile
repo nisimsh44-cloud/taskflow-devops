@@ -29,16 +29,16 @@ pipeline {
 
                 docker run -d --name ${CONTAINER_NAME} ${IMAGE_NAME}
 
-                for i in {1..10}; do
-                    docker run --rm \
-                      --network container:${CONTAINER_NAME} \
-                      curlimages/curl \
-                      -f http://localhost:5000/health && exit 0
+                echo "Waiting for application to start..."
 
-                    sleep 3
-                done
+                sleep 10
 
-                exit 1
+                docker logs ${CONTAINER_NAME}
+
+                docker run --rm \
+                  --network container:${CONTAINER_NAME} \
+                  curlimages/curl \
+                  -f http://localhost:5000/health
                 '''
             }
 
