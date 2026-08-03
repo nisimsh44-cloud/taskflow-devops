@@ -63,7 +63,7 @@ pipeline {
 
                 sleep 5
 
-                curl -f http://localhost:5000/health
+                docker exec taskflow-compose-app curl -f http://localhost:5000/health
                 '''
             }
         }
