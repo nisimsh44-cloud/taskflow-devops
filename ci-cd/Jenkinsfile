@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "taskflow-app"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t ${IMAGE_NAME} -f docker/Dockerfile .
+                '''
+            }
+        }
+
+        stage('Test Application') {
+            steps {
+                sh '''
+                docker run -d --name taskflow-test -p 5000:5000 ${IMAGE_NAME}
+
+                sleep 5
+
+                curl -f http://localhost:5000/health
+
+                docker stop taskflow-test
+                docker rm taskflow-test
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Deploy stage will restart application on EC2"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully"
+        }
+
+        failure {
+            echo "Pipeline failed"
+        }
+    }
+}
