@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "taskflow-app"
+        CONTAINER_NAME = "taskflow-test"
     }
 
     stages {
@@ -24,19 +25,22 @@ pipeline {
         stage('Test Application') {
             steps {
                 sh '''
-                docker run -d --name taskflow-test -p 5001:5000 ${IMAGE_NAME}
+                docker run -d --name ${CONTAINER_NAME} ${IMAGE_NAME}
 
                 sleep 5
 
-                curl -f http://localhost:5001/health
+                docker run --rm \
+                  --network container:${CONTAINER_NAME} \
+                  curlimages/curl \
+                  -f http://localhost:5000/health
                 '''
             }
 
             post {
                 always {
                     sh '''
-                    docker stop taskflow-test || true
-                    docker rm taskflow-test || true
+                    docker stop ${CONTAINER_NAME} || true
+                    docker rm ${CONTAINER_NAME} || true
                     '''
                 }
             }
