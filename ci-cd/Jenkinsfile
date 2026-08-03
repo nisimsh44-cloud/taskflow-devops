@@ -25,14 +25,20 @@ pipeline {
         stage('Test Application') {
             steps {
                 sh '''
+                docker rm -f ${CONTAINER_NAME} || true
+
                 docker run -d --name ${CONTAINER_NAME} ${IMAGE_NAME}
 
-                sleep 5
+                for i in {1..10}; do
+                    docker run --rm \
+                      --network container:${CONTAINER_NAME} \
+                      curlimages/curl \
+                      -f http://localhost:5000/health && exit 0
 
-                docker run --rm \
-                  --network container:${CONTAINER_NAME} \
-                  curlimages/curl \
-                  -f http://localhost:5000/health
+                    sleep 3
+                done
+
+                exit 1
                 '''
             }
 
