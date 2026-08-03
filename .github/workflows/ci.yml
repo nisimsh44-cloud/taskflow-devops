@@ -22,8 +22,14 @@ jobs:
       - name: Run container
         run: docker run -d -p 5000:5000 --name taskflow-test taskflow-app
 
+      - name: Check container logs
+        if: always()
+        run: docker logs taskflow-test
+
       - name: Health check
-        run: curl --fail http://localhost:5000/health
+        run: |
+          sleep 5
+          curl --fail http://localhost:5000/health
 
       - name: Stop container
         if: always()
