@@ -1,0 +1,24 @@
+replicaCount: 2
+
+image:
+  repository: nisimsharabi/taskflow-app
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 5000
+  nodePort: 31338
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+health:
+  path: /health

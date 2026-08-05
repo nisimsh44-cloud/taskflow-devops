@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ include "taskflow.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+
+spec:
+  selector:
+    app: {{ include "taskflow.name" . }}
+
+  ports:
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetPort }}
+    nodePort: {{ .Values.service.nodePort }}
+
+  type: {{ .Values.service.type }}
