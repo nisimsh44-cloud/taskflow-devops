@@ -20,8 +20,8 @@ spec:
     spec:
       containers:
       - name: taskflow-app
-        image: docker-taskflow-app:latest
-        imagePullPolicy: Never
+        image: nisimsharabi/taskflow-app:latest
+        imagePullPolicy: Always
 
         ports:
         - containerPort: 5000
